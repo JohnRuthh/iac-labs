@@ -13,9 +13,9 @@ permissions:
   contents: read
 
 jobs:
-  some-name:
-
-    runs-on: some-os
+  name:
+  
+    runs-on: ubuntu-latest
 
     defaults:
       run:
