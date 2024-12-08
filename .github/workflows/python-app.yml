@@ -39,3 +39,16 @@ jobs:
         pytest
     - name: Install Poetry
       uses: snok/install-poetry@v1
+    - name: Unit tests
+      run: |
+        cd example-app
+        poetry run task test
+    - name: Linter tests
+      run: |
+        poetry run task lint
+    - name: Formatter
+      run: |
+        poetry run task formatter
+    - name: Security tests
+      run: |
+        poetry run task security
