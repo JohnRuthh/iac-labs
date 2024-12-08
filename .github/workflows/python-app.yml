@@ -45,7 +45,6 @@ jobs:
       uses: snok/install-poetry@v1
     - name: Unit tests
       run: |
-        cd example-app
         poetry run task test
     - name: Linter tests
       run: |
