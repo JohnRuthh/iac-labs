@@ -43,15 +43,16 @@ jobs:
         pytest
     - name: Install Poetry
       uses: snok/install-poetry@v1
+    - name: Cache dependencies
+      uses: actions/cache@v3
+      with:
+        path: .venv
+        key: ${{ runner.os }}-venv-${{ hashFiles('**/poetry.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-venv
     - name: Install dependencies
       if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
       run: poetry install --no-interaction --no-root
-    - name: Cache build venv
-      id: cached-poetry-dependencies
-      uses: actions/cache@v3
-      with:
-        path: /home/runner/work/<path>/example-app/.venv
-        key: ${{ runner.os }}-venv
 
       
   unit-tests:
