@@ -49,9 +49,14 @@ jobs:
       
   unit-tests:
     needs: environment
-    runs-on: ubuntu-latest
-    
+    runs-on: ubuntu-latest    
     steps:
+    - name: Cache build venv
+      id: cached-poetry-dependencies
+      uses: actions/cache@v3
+      with:
+        path: /home/runner/work/<path>/example-app/.venv
+        key: ${{ runner.os }}-venv
     - name: Unit tests
       run: |
         poetry run task test
