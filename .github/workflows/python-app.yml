@@ -18,7 +18,7 @@ env:
   POETRY_URL: https://install.python-poetry.org
 
 jobs:
-  tests:
+  setup-enb:
   
     runs-on: ubuntu-latest
 
@@ -53,16 +53,150 @@ jobs:
     - name: Install Dependencies
       run: poetry install --no-interaction --no-root
 
-      
+  unit-tests:
+  
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./example-app
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    - name: Set up Python ${{ env.PYTHON_VERSION }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+      id: setup_python
+    # Poetry cache depends on OS, Python version and Poetry version.
+    - name: Cache Poetry cache
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pypoetry
+        key: poetry-cache-${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}-${{ env.POETRY_VERSION }}
+    # virtualenv cache should depends on OS, Python version and `poetry.lock` (and optionally workflow files).
+    - name: Cache Packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.local
+        key: poetry-local-${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}-${{ hashFiles('.github/workflows/*.yml') }}
+    - name: Install Poetry ${{ env.POETRY_VERSION }}
+      run: |
+        curl -sSL ${{ env.POETRY_URL }} | python - --version ${{ env.POETRY_VERSION }}
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
+    - name: Install Dependencies
+      run: poetry install --no-interaction --no-root
     - name: Unit tests
       run: |
         poetry run task test
+
+  lint:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./example-app
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    - name: Set up Python ${{ env.PYTHON_VERSION }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+      id: setup_python
+    # Poetry cache depends on OS, Python version and Poetry version.
+    - name: Cache Poetry cache
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pypoetry
+        key: poetry-cache-${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}-${{ env.POETRY_VERSION }}
+    # virtualenv cache should depends on OS, Python version and `poetry.lock` (and optionally workflow files).
+    - name: Cache Packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.local
+        key: poetry-local-${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}-${{ hashFiles('.github/workflows/*.yml') }}
+    - name: Install Poetry ${{ env.POETRY_VERSION }}
+      run: |
+        curl -sSL ${{ env.POETRY_URL }} | python - --version ${{ env.POETRY_VERSION }}
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
+    - name: Install Dependencies
+      run: poetry install --no-interaction --no-root
     - name: Linter tests
       run: |
         poetry run task lint
+
+  Formatter:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./example-app
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    - name: Set up Python ${{ env.PYTHON_VERSION }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+      id: setup_python
+    # Poetry cache depends on OS, Python version and Poetry version.
+    - name: Cache Poetry cache
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pypoetry
+        key: poetry-cache-${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}-${{ env.POETRY_VERSION }}
+    # virtualenv cache should depends on OS, Python version and `poetry.lock` (and optionally workflow files).
+    - name: Cache Packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.local
+        key: poetry-local-${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}-${{ hashFiles('.github/workflows/*.yml') }}
+    - name: Install Poetry ${{ env.POETRY_VERSION }}
+      run: |
+        curl -sSL ${{ env.POETRY_URL }} | python - --version ${{ env.POETRY_VERSION }}
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
+    - name: Install Dependencies
+      run: poetry install --no-interaction --no-root
     - name: Formatter
       run: |
         poetry run task formatter
+  Security:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./example-app
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    - name: Set up Python ${{ env.PYTHON_VERSION }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+      id: setup_python
+    # Poetry cache depends on OS, Python version and Poetry version.
+    - name: Cache Poetry cache
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pypoetry
+        key: poetry-cache-${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}-${{ env.POETRY_VERSION }}
+    # virtualenv cache should depends on OS, Python version and `poetry.lock` (and optionally workflow files).
+    - name: Cache Packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.local
+        key: poetry-local-${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}-${{ hashFiles('.github/workflows/*.yml') }}
+    - name: Install Poetry ${{ env.POETRY_VERSION }}
+      run: |
+        curl -sSL ${{ env.POETRY_URL }} | python - --version ${{ env.POETRY_VERSION }}
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
+    - name: Install Dependencies
+      run: poetry install --no-interaction --no-root
     - name: Security tests
       run: |
         poetry run task security
