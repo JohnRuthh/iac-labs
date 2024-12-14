@@ -56,7 +56,7 @@ jobs:
       name: Cache Python virtual environment
       uses: actions/cache@v3
       with:
-        path: .venv  # Adjust path to match your venv location
+        path: C:\Users\runneradmin\work\iac-labs\iac-labs\example-app\.venv
         key: ${{ runner.os }}-venv-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-venv-
