@@ -60,10 +60,8 @@ jobs:
       run: poetry install --no-interaction --no-root
 
   unit-tests:
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest]
-    runs-on: ${{ matrix.os }}
+  
+    runs-on: ubuntu-latest
     needs: 
     - lint
     - formatter
@@ -103,10 +101,7 @@ jobs:
         poetry run task test
 
   lint:
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest]
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
 
     needs: setup-env
     defaults:
@@ -144,10 +139,7 @@ jobs:
         poetry run task lint
 
   formatter:
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest]
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
 
     needs: setup-env
     defaults:
@@ -184,11 +176,7 @@ jobs:
       run: |
         poetry run task formatter
   security:
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest]
-    runs-on: ${{ matrix.os }}
-    
+    runs-on: ubuntu-latest
     needs: setup-env
 
     defaults:
