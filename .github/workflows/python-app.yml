@@ -62,8 +62,7 @@ jobs:
   unit-tests:
     strategy:
       matrix:
-        os: [ubuntu-22.04, ubuntu-20.04]
-        version: [10, 12, 14]
+        os: [ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     needs: 
     - lint
@@ -106,8 +105,7 @@ jobs:
   lint:
     strategy:
       matrix:
-        os: [ubuntu-22.04, ubuntu-20.04]
-        version: [10, 12, 14]
+        os: [ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
 
     needs: setup-env
@@ -148,8 +146,7 @@ jobs:
   formatter:
     strategy:
       matrix:
-        os: [ubuntu-22.04, ubuntu-20.04]
-        version: [10, 12, 14]
+        os: [ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
 
     needs: setup-env
@@ -189,8 +186,7 @@ jobs:
   security:
     strategy:
       matrix:
-        os: [ubuntu-22.04, ubuntu-20.04]
-        version: [10, 12, 14]
+        os: [ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     
     needs: setup-env
