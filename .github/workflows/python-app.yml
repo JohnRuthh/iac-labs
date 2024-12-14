@@ -26,12 +26,14 @@ jobs:
         include:
           - os: windows-latest
             windows: 1
+            ubuntu: 1
           - os: ubuntu-latest
             ubuntu: 1
     runs-on: ${{ matrix.os }}
 
     defaults:
       run:
+        shell: bash
         working-directory: ./example-app
 
     steps:
@@ -95,6 +97,7 @@ jobs:
 
     defaults:
       run:
+        shell: bash
         working-directory: ./example-app
 
     steps:
@@ -150,6 +153,7 @@ jobs:
     needs: setup-env
     defaults:
       run:
+        shell: bash
         working-directory: ./example-app
 
     steps:
@@ -205,6 +209,7 @@ jobs:
     needs: setup-env
     defaults:
       run:
+        shell: bash
         working-directory: ./example-app
 
     steps:
@@ -260,6 +265,7 @@ jobs:
 
     defaults:
       run:
+        shell: bash
         working-directory: ./example-app
 
     steps:
