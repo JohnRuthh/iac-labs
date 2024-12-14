@@ -74,7 +74,7 @@ jobs:
       run: poetry install --no-interaction --no-root
     - if: ${{ matrix.windows }}
       name: Install Dependencies
-      run: c/Users/runneradmin/AppData/Roaming/Python/Scripts/poetry install --no-interaction --no-root
+      run: /c/Users/runneradmin/AppData/Roaming/Python/Scripts/poetry install --no-interaction --no-root
 
   unit-tests:
     strategy:
