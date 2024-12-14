@@ -32,19 +32,42 @@ jobs:
 
     defaults:
       run:
+        shell: bash
         working-directory: ./example-app
 
     steps:
-    - if: ${{ matrix.ubuntu }}
-      name: Checkout
+    - name: Checkout
       uses: actions/checkout@v3
       
-    - if: ${{ matrix.ubuntu }}
-      name: Set up Python ${{ env.PYTHON_VERSION }}
+    - name: Set up Python ${{ env.PYTHON_VERSION }}
       uses: actions/setup-python@v4
       with:
         python-version: ${{ env.PYTHON_VERSION }}
       id: setup_python
+
+    - if: ${{ matrix.windows }}
+      name: Cache Poetry cache
+      uses: actions/cache@v3
+      with:
+        path: C:\Users\runneradmin\AppData\Local\pypoetry\Cache
+        key: poetry-cache-${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}-${{ env.POETRY_VERSION }}
+
+    - if: ${{ matrix.windows }}
+      name: Cache build venv
+      id: cached-poetry-dependencies-windows
+      uses: actions/cache@v3
+      with:
+        path: C:\Users\runneradmin\AppData\Local\pip\cache
+        key: ${{ runner.os }}-venv
+
+    - if: ${{ matrix.windows }}
+      name: Cache pip packages
+      uses: actions/cache@v3
+      with:
+        path: C:\Users\runneradmin\AppData\Local\pip\cache
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
 
     - if: ${{ matrix.ubuntu }}
       name: Cache Poetry cache
@@ -68,8 +91,7 @@ jobs:
         path: /home/runner/work/iac-labs/iac-labs/example-app/.venv
         key: ${{ runner.os }}-venv
 
-    - if: ${{ matrix.ubuntu }}    
-      name: Install Poetry ${{ env.POETRY_VERSION }}
+    - name: Install Poetry ${{ env.POETRY_VERSION }}
       run: |
         curl -sSL ${{ env.POETRY_URL }} | python - --version ${{ env.POETRY_VERSION }}
         echo "$HOME/.local/bin" >> $GITHUB_PATH
@@ -77,6 +99,9 @@ jobs:
     - if: ${{ matrix.ubuntu }}
       name: Install Dependencies
       run: poetry install --no-interaction --no-root
+    - if: ${{ matrix.windows }}
+      name: Install Dependencies
+      run: /c/Users/runneradmin/AppData/Roaming/Python/Scripts/poetry install --no-interaction --no-root
 
   unit-tests:
     strategy:
@@ -95,19 +120,42 @@ jobs:
 
     defaults:
       run:
+        shell: bash
         working-directory: ./example-app
 
     steps:
-    - if: ${{ matrix.ubuntu }}
-      name: Checkout
+    - name: Checkout
       uses: actions/checkout@v3
 
-    - if: ${{ matrix.ubuntu }}
-      name: Set up Python ${{ env.PYTHON_VERSION }}
+    - name: Set up Python ${{ env.PYTHON_VERSION }}
       uses: actions/setup-python@v4
       with:
         python-version: ${{ env.PYTHON_VERSION }}
       id: setup_python
+
+    - if: ${{ matrix.windows }}
+      name: Cache Poetry cache
+      uses: actions/cache@v3
+      with:
+        path: C:\Users\runneradmin\AppData\Local\pypoetry\Cache
+        key: poetry-cache-${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}-${{ env.POETRY_VERSION }}
+
+    - if: ${{ matrix.windows }}
+      name: Cache build venv
+      id: cached-poetry-dependencies-windows
+      uses: actions/cache@v3
+      with:
+        path: C:\Users\runneradmin\AppData\Local\pip\cache
+        key: ${{ runner.os }}-venv
+
+    - if: ${{ matrix.windows }}
+      name: Cache pip packages
+      uses: actions/cache@v3
+      with:
+        path: C:\Users\runneradmin\AppData\Local\pip\cache
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
 
     - if: ${{ matrix.ubuntu }}
       name: Cache Poetry cache
@@ -133,8 +181,14 @@ jobs:
 
     - if: ${{ matrix.ubuntu }}
       name: Unit tests
+      run: poetry run task test
+    - if: ${{ matrix.windows }}
+      name: Unit tests
       run: |
-        poetry run task test
+        curl -sSL ${{ env.POETRY_URL }} | python - --version ${{ env.POETRY_VERSION }}
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
+        /c/Users/runneradmin/AppData/Roaming/Python/Scripts/poetry install --no-interaction --no-root
+        /c/Users/runneradmin/AppData/Roaming/Python/Scripts/poetry run task test
 
   lint:
     strategy:
@@ -150,19 +204,42 @@ jobs:
     needs: setup-env
     defaults:
       run:
+        shell: bash
         working-directory: ./example-app
 
     steps:
-    - if: ${{ matrix.ubuntu }}
-      name: Checkout
+    - name: Checkout
       uses: actions/checkout@v3
 
-    - if: ${{ matrix.ubuntu }}
-      name: Set up Python ${{ env.PYTHON_VERSION }}
+    - name: Set up Python ${{ env.PYTHON_VERSION }}
       uses: actions/setup-python@v4
       with:
         python-version: ${{ env.PYTHON_VERSION }}
       id: setup_python
+
+    - if: ${{ matrix.windows }}
+      name: Cache Poetry cache
+      uses: actions/cache@v3
+      with:
+        path: C:\Users\runneradmin\AppData\Local\pypoetry\Cache
+        key: poetry-cache-${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}-${{ env.POETRY_VERSION }}
+
+    - if: ${{ matrix.windows }}
+      name: Cache build venv
+      id: cached-poetry-dependencies-windows
+      uses: actions/cache@v3
+      with:
+        path: C:\Users\runneradmin\AppData\Local\pip\cache
+        key: ${{ runner.os }}-venv
+
+    - if: ${{ matrix.windows }}
+      name: Cache pip packages
+      uses: actions/cache@v3
+      with:
+        path: C:\Users\runneradmin\AppData\Local\pip\cache
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
 
     - if: ${{ matrix.ubuntu }}
       name: Cache Poetry cache
@@ -187,9 +264,15 @@ jobs:
         key: ${{ runner.os }}-venv
 
     - if: ${{ matrix.ubuntu }}
-      name: Linter tests
+      name:  Linter tests
+      run: poetry run task lint
+    - if: ${{ matrix.windows }}
+      name:  Linter tests
       run: |
-        poetry run task lint
+        curl -sSL ${{ env.POETRY_URL }} | python - --version ${{ env.POETRY_VERSION }}
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
+        /c/Users/runneradmin/AppData/Roaming/Python/Scripts/poetry install --no-interaction --no-root
+        /c/Users/runneradmin/AppData/Roaming/Python/Scripts/poetry run task lint
 
   formatter:
     strategy:
@@ -205,19 +288,42 @@ jobs:
     needs: setup-env
     defaults:
       run:
+        shell: bash
         working-directory: ./example-app
 
     steps:
-    - if: ${{ matrix.ubuntu }}
-      name: Checkout
+    - name: Checkout
       uses: actions/checkout@v3
 
-    - if: ${{ matrix.ubuntu }}  
-      name: Set up Python ${{ env.PYTHON_VERSION }}
+    - name: Set up Python ${{ env.PYTHON_VERSION }}
       uses: actions/setup-python@v4
       with:
         python-version: ${{ env.PYTHON_VERSION }}
       id: setup_python
+
+    - if: ${{ matrix.windows }}
+      name: Cache Poetry cache
+      uses: actions/cache@v3
+      with:
+        path: C:\Users\runneradmin\AppData\Local\pypoetry\Cache
+        key: poetry-cache-${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}-${{ env.POETRY_VERSION }}
+
+    - if: ${{ matrix.windows }}
+      name: Cache build venv
+      id: cached-poetry-dependencies-windows
+      uses: actions/cache@v3
+      with:
+        path: C:\Users\runneradmin\AppData\Local\pip\cache
+        key: ${{ runner.os }}-venv
+
+    - if: ${{ matrix.windows }}
+      name: Cache pip packages
+      uses: actions/cache@v3
+      with:
+        path: C:\Users\runneradmin\AppData\Local\pip\cache
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
 
     - if: ${{ matrix.ubuntu }}
       name: Cache Poetry cache
@@ -233,7 +339,7 @@ jobs:
         path: ~/.local
         key: poetry-local-${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}
 
-    - if: ${{ matrix.ubuntu }}    
+    - if: ${{ matrix.ubuntu }}
       name: Cache build venv
       id: cached-poetry-dependencies
       uses: actions/cache@v3
@@ -243,8 +349,14 @@ jobs:
 
     - if: ${{ matrix.ubuntu }}
       name: Formatter
+      run: poetry run task formatter
+    - if: ${{ matrix.windows }}
+      name: Formatter
       run: |
-        poetry run task formatter
+        curl -sSL ${{ env.POETRY_URL }} | python - --version ${{ env.POETRY_VERSION }}
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
+        /c/Users/runneradmin/AppData/Roaming/Python/Scripts/poetry install --no-interaction --no-root
+        /c/Users/runneradmin/AppData/Roaming/Python/Scripts/poetry run task formatter
         
   security:
     strategy:
@@ -260,19 +372,42 @@ jobs:
 
     defaults:
       run:
+        shell: bash
         working-directory: ./example-app
 
     steps:
-    - if: ${{ matrix.ubuntu }}
-      name: Checkout
+    - name: Checkout
       uses: actions/checkout@v3
 
-    - if: ${{ matrix.ubuntu }}  
-      name: Set up Python ${{ env.PYTHON_VERSION }}
+    - name: Set up Python ${{ env.PYTHON_VERSION }}
       uses: actions/setup-python@v4
       with:
         python-version: ${{ env.PYTHON_VERSION }}
       id: setup_python
+
+    - if: ${{ matrix.windows }}
+      name: Cache Poetry cache
+      uses: actions/cache@v3
+      with:
+        path: C:\Users\runneradmin\AppData\Local\pypoetry\Cache
+        key: poetry-cache-${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}-${{ env.POETRY_VERSION }}
+
+    - if: ${{ matrix.windows }}
+      name: Cache build venv
+      id: cached-poetry-dependencies-windows
+      uses: actions/cache@v3
+      with:
+        path: C:\Users\runneradmin\AppData\Local\pip\cache
+        key: ${{ runner.os }}-venv
+
+    - if: ${{ matrix.windows }}
+      name: Cache pip packages
+      uses: actions/cache@v3
+      with:
+        path: C:\Users\runneradmin\AppData\Local\pip\cache
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
 
     - if: ${{ matrix.ubuntu }}
       name: Cache Poetry cache
@@ -288,14 +423,21 @@ jobs:
         path: ~/.local
         key: poetry-local-${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}
 
-    - if: ${{ matrix.ubuntu }}    
+    - if: ${{ matrix.ubuntu }}
       name: Cache build venv
       id: cached-poetry-dependencies
       uses: actions/cache@v3
       with:
         path: /home/runner/work/iac-labs/iac-labs/example-app/.venv
         key: ${{ runner.os }}-venv
-    - if: ${{ matrix.ubuntu }}    
+
+    - if: ${{ matrix.ubuntu }}
+      name: Security tests
+      run: poetry run task security
+    - if: ${{ matrix.windows }}
       name: Security tests
       run: |
-        poetry run task security
+        curl -sSL ${{ env.POETRY_URL }} | python - --version ${{ env.POETRY_VERSION }}
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
+        /c/Users/runneradmin/AppData/Roaming/Python/Scripts/poetry install --no-interaction --no-root
+        /c/Users/runneradmin/AppData/Roaming/Python/Scripts/poetry run task security
