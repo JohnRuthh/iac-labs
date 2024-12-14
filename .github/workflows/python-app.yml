@@ -20,50 +20,73 @@ env:
 jobs:
   setup-env:
   
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        include:
+          - os: windows-latest
+            windows: 1
+          - os: ubuntu-latest
+            ubuntu: 1
+    runs-on: ${{ matrix.os }}
 
     defaults:
       run:
         working-directory: ./example-app
 
     steps:
-    - name: Checkout
+    - if: ${{ matrix.ubuntu }}
+      name: Checkout
       uses: actions/checkout@v3
-    - name: Set up Python ${{ env.PYTHON_VERSION }}
+      
+    - if: ${{ matrix.ubuntu }}
+      name: Set up Python ${{ env.PYTHON_VERSION }}
       uses: actions/setup-python@v4
       with:
         python-version: ${{ env.PYTHON_VERSION }}
       id: setup_python
-    
-    - name: Cache Poetry cache
+
+    - if: ${{ matrix.ubuntu }}
+      name: Cache Poetry cache
       uses: actions/cache@v3
       with:
         path: ~/.cache/pypoetry
         key: poetry-cache-${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}-${{ env.POETRY_VERSION }}
-     
-    - name: Cache Packages
+
+    - if: ${{ matrix.ubuntu }}
+      name: Cache Packages
       uses: actions/cache@v3
       with:
         path: ~/.local
         key: poetry-local-${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}
-    - name: Cache build venv
+
+    - if: ${{ matrix.ubuntu }}
+      name: Cache build venv
       id: cached-poetry-dependencies
       uses: actions/cache@v3
       with:
         path: /home/runner/work/iac-labs/iac-labs/example-app/.venv
         key: ${{ runner.os }}-venv
-    - name: Install Poetry ${{ env.POETRY_VERSION }}
+
+    - if: ${{ matrix.ubuntu }}    
+      name: Install Poetry ${{ env.POETRY_VERSION }}
       run: |
         curl -sSL ${{ env.POETRY_URL }} | python - --version ${{ env.POETRY_VERSION }}
         echo "$HOME/.local/bin" >> $GITHUB_PATH
-    - name: Install Dependencies
+
+    - if: ${{ matrix.ubuntu }}
+      name: Install Dependencies
       run: poetry install --no-interaction --no-root
 
   unit-tests:
     strategy:
       matrix:
-        version: [10, 12, 14]
         os: [ubuntu-latest, windows-latest]
+        include:
+          - os: windows-latest
+            windows: 1
+          - os: ubuntu-latest
+            ubuntu: 1
     runs-on: ${{ matrix.os }}
     needs: 
     - lint
@@ -75,39 +98,53 @@ jobs:
         working-directory: ./example-app
 
     steps:
-    - name: Checkout
+    - if: ${{ matrix.ubuntu }}
+      name: Checkout
       uses: actions/checkout@v3
-    - name: Set up Python ${{ env.PYTHON_VERSION }}
+
+    - if: ${{ matrix.ubuntu }}
+      name: Set up Python ${{ env.PYTHON_VERSION }}
       uses: actions/setup-python@v4
       with:
         python-version: ${{ env.PYTHON_VERSION }}
       id: setup_python
-    
-    - name: Cache Poetry cache
+
+    - if: ${{ matrix.ubuntu }}
+      name: Cache Poetry cache
       uses: actions/cache@v3
       with:
         path: ~/.cache/pypoetry
         key: poetry-cache-${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}-${{ env.POETRY_VERSION }}
-    - name: Cache Packages
+
+    - if: ${{ matrix.ubuntu }}
+      name: Cache Packages
       uses: actions/cache@v3
       with:
         path: ~/.local
         key: poetry-local-${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}
-    - name: Cache build venv
+
+    - if: ${{ matrix.ubuntu }}
+      name: Cache build venv
       id: cached-poetry-dependencies
       uses: actions/cache@v3
       with:
         path: /home/runner/work/iac-labs/iac-labs/example-app/.venv
         key: ${{ runner.os }}-venv
-    - name: Unit tests
+
+    - if: ${{ matrix.ubuntu }}
+      name: Unit tests
       run: |
         poetry run task test
 
   lint:
     strategy:
       matrix:
-        version: [10, 12, 14]
         os: [ubuntu-latest, windows-latest]
+        include:
+          - os: windows-latest
+            windows: 1
+          - os: ubuntu-latest
+            ubuntu: 1
     runs-on: ${{ matrix.os }}
 
     needs: setup-env
@@ -116,40 +153,53 @@ jobs:
         working-directory: ./example-app
 
     steps:
-    - name: Checkout
+    - if: ${{ matrix.ubuntu }}
+      name: Checkout
       uses: actions/checkout@v3
-    - name: Set up Python ${{ env.PYTHON_VERSION }}
+
+    - if: ${{ matrix.ubuntu }}
+      name: Set up Python ${{ env.PYTHON_VERSION }}
       uses: actions/setup-python@v4
       with:
         python-version: ${{ env.PYTHON_VERSION }}
       id: setup_python
-    
-    - name: Cache Poetry cache
+
+    - if: ${{ matrix.ubuntu }}
+      name: Cache Poetry cache
       uses: actions/cache@v3
       with:
         path: ~/.cache/pypoetry
         key: poetry-cache-${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}-${{ env.POETRY_VERSION }}
-    
-    - name: Cache Packages
+
+    - if: ${{ matrix.ubuntu }}
+      name: Cache Packages
       uses: actions/cache@v3
       with:
         path: ~/.local
         key: poetry-local-${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}
-    - name: Cache build venv
+
+    - if: ${{ matrix.ubuntu }}
+      name: Cache build venv
       id: cached-poetry-dependencies
       uses: actions/cache@v3
       with:
         path: /home/runner/work/iac-labs/iac-labs/example-app/.venv
         key: ${{ runner.os }}-venv
-    - name: Linter tests
+
+    - if: ${{ matrix.ubuntu }}
+      name: Linter tests
       run: |
         poetry run task lint
 
   formatter:
     strategy:
       matrix:
-        version: [10, 12, 14]
         os: [ubuntu-latest, windows-latest]
+        include:
+          - os: windows-latest
+            windows: 1
+          - os: ubuntu-latest
+            ubuntu: 1
     runs-on: ${{ matrix.os }}
 
     needs: setup-env
@@ -158,39 +208,53 @@ jobs:
         working-directory: ./example-app
 
     steps:
-    - name: Checkout
+    - if: ${{ matrix.ubuntu }}
+      name: Checkout
       uses: actions/checkout@v3
-    - name: Set up Python ${{ env.PYTHON_VERSION }}
+
+    - if: ${{ matrix.ubuntu }}  
+      name: Set up Python ${{ env.PYTHON_VERSION }}
       uses: actions/setup-python@v4
       with:
         python-version: ${{ env.PYTHON_VERSION }}
       id: setup_python
-    
-    - name: Cache Poetry cache
+
+    - if: ${{ matrix.ubuntu }}
+      name: Cache Poetry cache
       uses: actions/cache@v3
       with:
         path: ~/.cache/pypoetry
         key: poetry-cache-${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}-${{ env.POETRY_VERSION }}
-    
-    - name: Cache Packages
+
+    - if: ${{ matrix.ubuntu }}
+      name: Cache Packages
       uses: actions/cache@v3
       with:
         path: ~/.local
         key: poetry-local-${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}
-    - name: Cache build venv
+
+    - if: ${{ matrix.ubuntu }}    
+      name: Cache build venv
       id: cached-poetry-dependencies
       uses: actions/cache@v3
       with:
         path: /home/runner/work/iac-labs/iac-labs/example-app/.venv
         key: ${{ runner.os }}-venv
-    - name: Formatter
+
+    - if: ${{ matrix.ubuntu }}
+      name: Formatter
       run: |
         poetry run task formatter
+        
   security:
     strategy:
       matrix:
-        version: [10, 12, 14]
         os: [ubuntu-latest, windows-latest]
+        include:
+          - os: windows-latest
+            windows: 1
+          - os: ubuntu-latest
+            ubuntu: 1
     runs-on: ${{ matrix.os }}
     needs: setup-env
 
@@ -199,31 +263,39 @@ jobs:
         working-directory: ./example-app
 
     steps:
-    - name: Checkout
+    - if: ${{ matrix.ubuntu }}
+      name: Checkout
       uses: actions/checkout@v3
-    - name: Set up Python ${{ env.PYTHON_VERSION }}
+
+    - if: ${{ matrix.ubuntu }}  
+      name: Set up Python ${{ env.PYTHON_VERSION }}
       uses: actions/setup-python@v4
       with:
         python-version: ${{ env.PYTHON_VERSION }}
       id: setup_python
-    
-    - name: Cache Poetry cache
+
+    - if: ${{ matrix.ubuntu }}
+      name: Cache Poetry cache
       uses: actions/cache@v3
       with:
         path: ~/.cache/pypoetry
         key: poetry-cache-${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}-${{ env.POETRY_VERSION }}
-    
-    - name: Cache Packages
+
+    - if: ${{ matrix.ubuntu }}
+      name: Cache Packages
       uses: actions/cache@v3
       with:
         path: ~/.local
         key: poetry-local-${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}
-    - name: Cache build venv
+
+    - if: ${{ matrix.ubuntu }}    
+      name: Cache build venv
       id: cached-poetry-dependencies
       uses: actions/cache@v3
       with:
         path: /home/runner/work/iac-labs/iac-labs/example-app/.venv
         key: ${{ runner.os }}-venv
-    - name: Security tests
+    - if: ${{ matrix.ubuntu }}    
+      name: Security tests
       run: |
         poetry run task security
