@@ -52,6 +52,24 @@ jobs:
         path: C:\Users\runneradmin\AppData\Local\pypoetry\Cache
         key: poetry-cache-${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}-${{ env.POETRY_VERSION }}
 
+    - if: ${{ matrix.windows }}
+      name: Cache Python virtual environment
+      uses: actions/cache@v3
+      with:
+        path: .venv  # Adjust path to match your venv location
+        key: ${{ runner.os }}-venv-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-venv-
+
+    - if: ${{ matrix.windows }}
+      name: Cache pip packages
+      uses: actions/cache@v3
+      with:
+        path: C:\Users\runneradmin\AppData\Local\pip\cache
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
     - if: ${{ matrix.ubuntu }}
       name: Cache Poetry cache
       uses: actions/cache@v3
@@ -116,19 +134,47 @@ jobs:
         python-version: ${{ env.PYTHON_VERSION }}
       id: setup_python
 
-    - name: Cache Poetry cache
+    - if: ${{ matrix.windows }}
+      name: Cache Poetry cache
+      uses: actions/cache@v3
+      with:
+        path: C:\Users\runneradmin\AppData\Local\pypoetry\Cache
+        key: poetry-cache-${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}-${{ env.POETRY_VERSION }}
+
+    - if: ${{ matrix.windows }}
+      name: Cache Python virtual environment
+      uses: actions/cache@v3
+      with:
+        path: .venv  # Adjust path to match your venv location
+        key: ${{ runner.os }}-venv-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-venv-
+
+    - if: ${{ matrix.windows }}
+      name: Cache pip packages
+      uses: actions/cache@v3
+      with:
+        path: C:\Users\runneradmin\AppData\Local\pip\cache
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
+    - if: ${{ matrix.ubuntu }}
+      name: Cache Poetry cache
       uses: actions/cache@v3
       with:
         path: ~/.cache/pypoetry
         key: poetry-cache-${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}-${{ env.POETRY_VERSION }}
 
-    - name: Cache Packages
+    - if: ${{ matrix.ubuntu }}
+      name: Cache Packages
       uses: actions/cache@v3
       with:
         path: ~/.local
         key: poetry-local-${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}
 
-    - name: Cache build venv
+    - if: ${{ matrix.ubuntu }}
+      name: Cache build venv
       id: cached-poetry-dependencies
       uses: actions/cache@v3
       with:
@@ -166,19 +212,47 @@ jobs:
         python-version: ${{ env.PYTHON_VERSION }}
       id: setup_python
 
-    - name: Cache Poetry cache
+    - if: ${{ matrix.windows }}
+      name: Cache Poetry cache
+      uses: actions/cache@v3
+      with:
+        path: C:\Users\runneradmin\AppData\Local\pypoetry\Cache
+        key: poetry-cache-${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}-${{ env.POETRY_VERSION }}
+
+    - if: ${{ matrix.windows }}
+      name: Cache Python virtual environment
+      uses: actions/cache@v3
+      with:
+        path: .venv  # Adjust path to match your venv location
+        key: ${{ runner.os }}-venv-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-venv-
+
+    - if: ${{ matrix.windows }}
+      name: Cache pip packages
+      uses: actions/cache@v3
+      with:
+        path: C:\Users\runneradmin\AppData\Local\pip\cache
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
+    - if: ${{ matrix.ubuntu }}
+      name: Cache Poetry cache
       uses: actions/cache@v3
       with:
         path: ~/.cache/pypoetry
         key: poetry-cache-${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}-${{ env.POETRY_VERSION }}
 
-    - name: Cache Packages
+    - if: ${{ matrix.ubuntu }}
+      name: Cache Packages
       uses: actions/cache@v3
       with:
         path: ~/.local
         key: poetry-local-${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}
 
-    - name: Cache build venv
+    - if: ${{ matrix.ubuntu }}
+      name: Cache build venv
       id: cached-poetry-dependencies
       uses: actions/cache@v3
       with:
@@ -216,19 +290,47 @@ jobs:
         python-version: ${{ env.PYTHON_VERSION }}
       id: setup_python
 
-    - name: Cache Poetry cache
+    - if: ${{ matrix.windows }}
+      name: Cache Poetry cache
+      uses: actions/cache@v3
+      with:
+        path: C:\Users\runneradmin\AppData\Local\pypoetry\Cache
+        key: poetry-cache-${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}-${{ env.POETRY_VERSION }}
+
+    - if: ${{ matrix.windows }}
+      name: Cache Python virtual environment
+      uses: actions/cache@v3
+      with:
+        path: .venv  # Adjust path to match your venv location
+        key: ${{ runner.os }}-venv-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-venv-
+
+    - if: ${{ matrix.windows }}
+      name: Cache pip packages
+      uses: actions/cache@v3
+      with:
+        path: C:\Users\runneradmin\AppData\Local\pip\cache
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
+    - if: ${{ matrix.ubuntu }}
+      name: Cache Poetry cache
       uses: actions/cache@v3
       with:
         path: ~/.cache/pypoetry
         key: poetry-cache-${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}-${{ env.POETRY_VERSION }}
 
-    - name: Cache Packages
+    - if: ${{ matrix.ubuntu }}
+      name: Cache Packages
       uses: actions/cache@v3
       with:
         path: ~/.local
         key: poetry-local-${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}
 
-    - name: Cache build venv
+    - if: ${{ matrix.ubuntu }}
+      name: Cache build venv
       id: cached-poetry-dependencies
       uses: actions/cache@v3
       with:
@@ -266,24 +368,53 @@ jobs:
         python-version: ${{ env.PYTHON_VERSION }}
       id: setup_python
 
-    - name: Cache Poetry cache
+    - if: ${{ matrix.windows }}
+      name: Cache Poetry cache
+      uses: actions/cache@v3
+      with:
+        path: C:\Users\runneradmin\AppData\Local\pypoetry\Cache
+        key: poetry-cache-${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}-${{ env.POETRY_VERSION }}
+
+    - if: ${{ matrix.windows }}
+      name: Cache Python virtual environment
+      uses: actions/cache@v3
+      with:
+        path: .venv  # Adjust path to match your venv location
+        key: ${{ runner.os }}-venv-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-venv-
+
+    - if: ${{ matrix.windows }}
+      name: Cache pip packages
+      uses: actions/cache@v3
+      with:
+        path: C:\Users\runneradmin\AppData\Local\pip\cache
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
+    - if: ${{ matrix.ubuntu }}
+      name: Cache Poetry cache
       uses: actions/cache@v3
       with:
         path: ~/.cache/pypoetry
         key: poetry-cache-${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}-${{ env.POETRY_VERSION }}
 
-    - name: Cache Packages
+    - if: ${{ matrix.ubuntu }}
+      name: Cache Packages
       uses: actions/cache@v3
       with:
         path: ~/.local
         key: poetry-local-${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}
-  
-    - name: Cache build venv
+
+    - if: ${{ matrix.ubuntu }}
+      name: Cache build venv
       id: cached-poetry-dependencies
       uses: actions/cache@v3
       with:
         path: /home/runner/work/iac-labs/iac-labs/example-app/.venv
         key: ${{ runner.os }}-venv
+        
     - name: Security tests
       run: |
         poetry run task security
