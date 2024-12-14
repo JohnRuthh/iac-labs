@@ -184,7 +184,11 @@ jobs:
       run: poetry run task test
     - if: ${{ matrix.windows }}
       name: Unit tests
-      run: /c/Users/runneradmin/AppData/Roaming/Python/Scripts/poetry run task test
+      run: |
+        curl -sSL ${{ env.POETRY_URL }} | python - --version ${{ env.POETRY_VERSION }}
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
+        /c/Users/runneradmin/AppData/Roaming/Python/Scripts/poetry install --no-interaction --no-root
+        /c/Users/runneradmin/AppData/Roaming/Python/Scripts/poetry run task test
 
   lint:
     strategy:
@@ -264,7 +268,11 @@ jobs:
       run: poetry run task lint
     - if: ${{ matrix.windows }}
       name:  Linter tests
-      run: /c/Users/runneradmin/AppData/Roaming/Python/Scripts/poetry run task lint
+      run: |
+        curl -sSL ${{ env.POETRY_URL }} | python - --version ${{ env.POETRY_VERSION }}
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
+        /c/Users/runneradmin/AppData/Roaming/Python/Scripts/poetry install --no-interaction --no-root
+        /c/Users/runneradmin/AppData/Roaming/Python/Scripts/poetry run task lint
 
   formatter:
     strategy:
@@ -344,7 +352,11 @@ jobs:
       run: poetry run task formatter
     - if: ${{ matrix.windows }}
       name: Formatter
-      run: /c/Users/runneradmin/AppData/Roaming/Python/Scripts/poetry run task formatter
+      run: |
+        curl -sSL ${{ env.POETRY_URL }} | python - --version ${{ env.POETRY_VERSION }}
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
+        /c/Users/runneradmin/AppData/Roaming/Python/Scripts/poetry install --no-interaction --no-root
+        /c/Users/runneradmin/AppData/Roaming/Python/Scripts/poetry run task formatter
         
   security:
     strategy:
@@ -424,4 +436,8 @@ jobs:
       run: poetry run task security
     - if: ${{ matrix.windows }}
       name: Security tests
-      run: /c/Users/runneradmin/AppData/Roaming/Python/Scripts/poetry run task security
+      run: |
+        curl -sSL ${{ env.POETRY_URL }} | python - --version ${{ env.POETRY_VERSION }}
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
+        /c/Users/runneradmin/AppData/Roaming/Python/Scripts/poetry install --no-interaction --no-root
+        /c/Users/runneradmin/AppData/Roaming/Python/Scripts/poetry run task security
