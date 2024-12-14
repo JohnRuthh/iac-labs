@@ -45,19 +45,29 @@ jobs:
         python-version: ${{ env.PYTHON_VERSION }}
       id: setup_python
 
-    - name: Cache Poetry cache
+    - if: ${{ matrix.windows }}
+      name: Cache Poetry cache
+      uses: actions/cache@v3
+      with:
+        path: /c/Users/JohnRuthh/AppData/Local/pypoetry/Cache
+        key: poetry-cache-${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}-${{ env.POETRY_VERSION }}
+
+    - if: ${{ matrix.ubuntu }}
+      name: Cache Poetry cache
       uses: actions/cache@v3
       with:
         path: ~/.cache/pypoetry
         key: poetry-cache-${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}-${{ env.POETRY_VERSION }}
 
-    - name: Cache Packages
+    - if: ${{ matrix.ubuntu }}
+      name: Cache Packages
       uses: actions/cache@v3
       with:
         path: ~/.local
         key: poetry-local-${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}
 
-    - name: Cache build venv
+    - if: ${{ matrix.ubuntu }}
+      name: Cache build venv
       id: cached-poetry-dependencies
       uses: actions/cache@v3
       with:
